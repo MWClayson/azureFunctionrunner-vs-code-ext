@@ -1,0 +1,170 @@
+{
+  "name": "azure-function-runner",
+  "displayName": "Azure Function Runner",
+  "description": "Manage and run Azure Function projects from a side panel",
+  "version": "0.4.0",
+  "publisher": "MWClayson",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:azureFunctionRunner.functionsView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "azureFunctionRunner",
+          "title": "Azure Function Runner",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "azureFunctionRunner": [
+        {
+          "id": "azureFunctionRunner.functionsView",
+          "name": "Functions"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "azureFunctionRunner.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "azureFunctionRunner.startFunction",
+        "title": "Start Function",
+        "icon": "$(play)"
+      },
+      {
+        "command": "azureFunctionRunner.stopFunction",
+        "title": "Stop Function",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "azureFunctionRunner.restartFunction",
+        "title": "Restart Function",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "azureFunctionRunner.startAll",
+        "title": "Start All Functions",
+        "icon": "$(play-circle)"
+      },
+      {
+        "command": "azureFunctionRunner.stopAll",
+        "title": "Stop All Functions",
+        "icon": "$(stop-circle)"
+      },
+      {
+        "command": "azureFunctionRunner.showLogs",
+        "title": "Show Logs",
+        "icon": "$(output)"
+      },
+      {
+        "command": "azureFunctionRunner.attachDebugger",
+        "title": "Attach Debugger",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "azureFunctionRunner.startAndDebug",
+        "title": "Start & Debug",
+        "icon": "$(debug)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "azureFunctionRunner.startAll",
+          "when": "view == azureFunctionRunner.functionsView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "azureFunctionRunner.stopAll",
+          "when": "view == azureFunctionRunner.functionsView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "azureFunctionRunner.refresh",
+          "when": "view == azureFunctionRunner.functionsView",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "azureFunctionRunner.startFunction",
+          "when": "view == azureFunctionRunner.functionsView && viewItem == functionProject-stopped",
+          "group": "inline@1"
+        },
+        {
+          "command": "azureFunctionRunner.stopFunction",
+          "when": "view == azureFunctionRunner.functionsView && viewItem == functionProject-running",
+          "group": "inline@1"
+        },
+        {
+          "command": "azureFunctionRunner.restartFunction",
+          "when": "view == azureFunctionRunner.functionsView && viewItem =~ /functionProject-.*/",
+          "group": "inline@2"
+        },
+        {
+          "command": "azureFunctionRunner.showLogs",
+          "when": "view == azureFunctionRunner.functionsView && viewItem =~ /functionProject-.*/",
+          "group": "logs@1"
+        },
+        {
+          "command": "azureFunctionRunner.attachDebugger",
+          "when": "view == azureFunctionRunner.functionsView && viewItem == functionProject-running",
+          "group": "debug@1"
+        },
+        {
+          "command": "azureFunctionRunner.startAndDebug",
+          "when": "view == azureFunctionRunner.functionsView && viewItem == functionProject-stopped",
+          "group": "debug@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Azure Function Runner",
+      "properties": {
+        "azureFunctionRunner.scanStandaloneProjects": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan for Azure Function projects not in solution files"
+        },
+        "azureFunctionRunner.autoRefresh": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically refresh when workspace changes"
+        },
+        "azureFunctionRunner.funcCliPath": {
+          "type": "string",
+          "default": "func",
+          "description": "Path to Azure Functions Core Tools CLI"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "typescript": "^5.2.0"
+  }
+}

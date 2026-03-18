@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#0078D4"/>
+  
+  <!-- Lightning bolt (Azure Functions symbol) -->
+  <path d="M 70 20 L 45 65 L 60 65 L 55 108 L 85 58 L 68 58 Z" 
+        fill="#FFFFFF" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  
+  <!-- Play button overlay -->
+  <circle cx="90" cy="90" r="18" fill="#50E6FF"/>
+  <path d="M 85 82 L 85 98 L 98 90 Z" fill="#0078D4"/>
+</svg>
+
+<!-- Made with Bob -->
