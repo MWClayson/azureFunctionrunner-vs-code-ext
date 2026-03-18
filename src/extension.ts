@@ -249,7 +249,7 @@ async function showLogs(project: FunctionProject): Promise<void> {
 }
 
 /**
- * Attach debugger to a running function
+ * Attach debugger to a running function (automatically using PID)
  */
 async function attachDebugger(project: FunctionProject): Promise<void> {
     if (project.status !== FunctionStatus.Running) {
@@ -259,18 +259,44 @@ async function attachDebugger(project: FunctionProject): Promise<void> {
         return;
     }
 
+    // Check if we have a PID
+    if (!project.pid) {
+        vscode.window.showWarningMessage(
+            `Cannot attach debugger: Process ID not available for "${project.name}".`
+        );
+        return;
+    }
+
     // Get the workspace folder for this function
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(
         vscode.Uri.file(project.path)
     );
 
-    // Start debugging with process picker
-    await vscode.debug.startDebugging(workspaceFolder ?? undefined, {
+    // Start debugging with specific process ID
+    const success = await vscode.debug.startDebugging(workspaceFolder ?? undefined, {
         type: 'coreclr',
         request: 'attach',
         name: `Debug: ${project.name}`,
-        processId: '${command:pickProcess}',
+        processId: String(project.pid),
     });
+
+    if (success) {
+        vscode.window.showInformationMessage(
+            `Debugger attached to ${project.name} (PID: ${project.pid})`
+        );
+    } else {
+        vscode.window.showErrorMessage(
+            `Failed to attach debugger to ${project.name}. The process may have exited or the debugger may not support this process type.`
+        );
+    }
+}
+
+/**
+ * Attach debugger to a running function automatically (alias for attachDebugger)
+ */
+async function attachDebuggerAuto(project: FunctionProject): Promise<void> {
+    // Both commands now use automatic PID-based attachment
+    await attachDebugger(project);
 }
 
 /**
@@ -297,8 +323,8 @@ async function startAndDebug(project: FunctionProject): Promise<void> {
         await sleep(2000);
     }
 
-    // 4. Open the process picker to attach
-    await attachDebugger(project);
+    // 4. Auto-attach to the specific process
+    await attachDebuggerAuto(project);
 }
 
 /**

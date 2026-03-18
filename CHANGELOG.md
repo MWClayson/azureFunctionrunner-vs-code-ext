@@ -2,6 +2,23 @@
 
 All notable changes to the Azure Function Runner extension will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- **Enhanced Debugger Integration**:
+  - Both "Attach Debugger" (right-click) and "Start & Debug" buttons now automatically attach to the specific process ID
+  - No longer opens the process picker dropdown - provides seamless one-click debugging
+  - Uses the tracked PID from ProcessManager for direct attachment
+  - Provides user feedback on successful attachment with PID information
+  - Shows clear error messages if process ID is unavailable or attachment fails
+
+### Technical Details
+- `attachDebugger()` now uses automatic PID-based attachment instead of process picker
+- `attachDebuggerAuto()` is now an alias that calls `attachDebugger()`
+- Both commands validate function is running and has a valid PID before attempting attachment
+- Uses `project.pid` (tracked by ProcessManager) to attach directly to the .NET process
+- Shows informative success/error messages to guide the user
+
 ## [0.4.0] - 2026-03-17
 
 ### Added - Phase 1: Core Infrastructure (REFACTOR.md Implementation)
